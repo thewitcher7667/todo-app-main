@@ -48,6 +48,7 @@ body {
     border: 1px solid white;
     border-radius: 10px;
     padding: 2.5px;
+    font-size: 18px;
     outline: none;
 }
 
@@ -83,16 +84,40 @@ article {
     height: fit-content;
     background-color: hsl(0, 0%, 17%);
     color: white;
+    margin:1px;
+    padding:1px;
+    box-sizing:border-box;
+    font-size:18px;
 }
- .sec22 div{
-     padding:10px;
- }
+.sec22 div {
+    box-sizing: border-box;
+    padding: 10px;
+    width: 400px;
+
+}
 .sec22 input {
     background-color: #eee;
+    width :18px;
+    height:18px;
+    margin-right:330px;
+}
+.sec22 label{
+    margin-left:20px;
 }
 
 .sec3 {
     display: flex;
     justify-content: space-between;
     padding:5px;
+}
+
+    .sec3 input {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+.sec22 input, .sec22 span {
+    cursor: pointer;
 }
