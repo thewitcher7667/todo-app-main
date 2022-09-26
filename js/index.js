@@ -12,18 +12,11 @@ const buttComp = document.getElementById('buttComp');
 const buttClear = document.getElementById('buttClear');
 
 
+
 //vars
-let light = document.cookie.split(' ');
-light.forEach((el) => {
-    els = el.split('=');
-    if (els[0] === 'bool') {
-        if (els[1] === "true") {
-            light = "true";
-        } if (els[1] === "false") {
-            light = "false";
-        }
-    } 
-})
+let light = getCookie('bool');
+
+let dataCookieFirst = true;
 
 let val = 0;
 
@@ -61,6 +54,7 @@ buttClear.addEventListener('click', () => {
     let count2 = document.querySelectorAll('.completed');
     count2.forEach((count) => {
         count.remove();
+        checkEmp();
     });
 
 });
@@ -79,12 +73,12 @@ function lightDark() {
     if ((light == "true")) {
         img1.src = "./images/bg-desktop-dark.jpg";
         light = "false";
-        document.cookie = `bool = true ;expires=Thu, 18 Dec 2025 12:00:00 UTC`;
+        createCookie('bool', 'true', '180');
         document.querySelector('body').style.backgroundColor = "hsl(235, 21%, 11%)";
         img2.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><path fill="#FFF" fill-rule="evenodd" d="M13 21a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-5.657-2.343a1 1 0 010 1.414l-2.121 2.121a1 1 0 01-1.414-1.414l2.12-2.121a1 1 0 011.415 0zm12.728 0l2.121 2.121a1 1 0 01-1.414 1.414l-2.121-2.12a1 1 0 011.414-1.415zM13 8a5 5 0 110 10 5 5 0 010-10zm12 4a1 1 0 110 2h-3a1 1 0 110-2h3zM4 12a1 1 0 110 2H1a1 1 0 110-2h3zm18.192-8.192a1 1 0 010 1.414l-2.12 2.121a1 1 0 01-1.415-1.414l2.121-2.121a1 1 0 011.414 0zm-16.97 0l2.121 2.12A1 1 0 015.93 7.344L3.808 5.222a1 1 0 011.414-1.414zM13 0a1 1 0 011 1v3a1 1 0 11-2 0V1a1 1 0 011-1z"/></svg>'
     } else {
         light = "true";
-        document.cookie = `bool = false ;expires=Thu, 18 Dec 2025 12:00:00 UTC`;
+        createCookie('bool', 'false', '180')
         img1.src = "./images/bg-desktop-light.jpg";
         document.querySelector('body').style.backgroundColor = "white";
         img2.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><path fill="#FFF" fill-rule="evenodd" d="M13 0c.81 0 1.603.074 2.373.216C10.593 1.199 7 5.43 7 10.5 7 16.299 11.701 21 17.5 21c2.996 0 5.7-1.255 7.613-3.268C23.22 22.572 18.51 26 13 26 5.82 26 0 20.18 0 13S5.82 0 13 0z"/></svg>'
@@ -147,6 +141,10 @@ function make() {
     addEventListeners();
     itemLeft();
     del();
+    if (dataCookieFirst == true) {
+    } else {
+        cookie();
+    }
    
 }
 
@@ -173,7 +171,8 @@ function addEventListeners() {
         del();
         act();
         comp();
-        all()
+        all();
+        cookie();
          return false;
 
     }
@@ -243,12 +242,112 @@ function del() {
             let num = span.id.split("");
             document.getElementById(`IDTwo${num[4]}`).remove();
             itemLeft();
+            checkEmp();
+            cookie();
         });
 
     })
    
 }
 
+function checkEmp() {
+    let empty = document.querySelectorAll('.sec22 div');
+    empty.forEach((check) => {
+        if (check.innerHTML === '') {
+            check.remove();
+            cookie();
+        }
+    });
+}
+
+
+
+function cookie() {
+    if (dataCookieFirst === true) {
+        let datac = getCookie("data");
+        if (datac == '') {
+            datacj = '';
+        } else {
+            let datacj = JSON.parse(datac);
+            for (let i = 0; i < datacj.length; i++) {
+               make();
+               document.getElementById(`label${i}`).innerText = datacj[i];
+                console.log(i);
+            }
+        }
+    } else if (dataCookieFirst === false) {
+        let theData = document.querySelectorAll('label');
+        dataArr = [];
+        theData.forEach((data) => {
+            let dataInn = data.innerHTML;
+            dataArr.push(dataInn);
+        });
+        let strigData = JSON.stringify(dataArr);
+        createCookie('data', strigData,'180');
+    }
+    dataCookieFirst = false;
+}
+
+function createCookie(name, value, days) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+function myFunction(x) {
+    if (x.matches) { // If media query matches
+        if ((light == "true")) {
+            img1.src = "./images/bg-mobile-dark.jpg";
+            light = "false";
+            createCookie('bool', 'true', '180');
+            document.querySelector('body').style.backgroundColor = "hsl(235, 21%, 11%)";
+            img2.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><path fill="#FFF" fill-rule="evenodd" d="M13 21a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-5.657-2.343a1 1 0 010 1.414l-2.121 2.121a1 1 0 01-1.414-1.414l2.12-2.121a1 1 0 011.415 0zm12.728 0l2.121 2.121a1 1 0 01-1.414 1.414l-2.121-2.12a1 1 0 011.414-1.415zM13 8a5 5 0 110 10 5 5 0 010-10zm12 4a1 1 0 110 2h-3a1 1 0 110-2h3zM4 12a1 1 0 110 2H1a1 1 0 110-2h3zm18.192-8.192a1 1 0 010 1.414l-2.12 2.121a1 1 0 01-1.415-1.414l2.121-2.121a1 1 0 011.414 0zm-16.97 0l2.121 2.12A1 1 0 015.93 7.344L3.808 5.222a1 1 0 011.414-1.414zM13 0a1 1 0 011 1v3a1 1 0 11-2 0V1a1 1 0 011-1z"/></svg>'
+        } else {
+            light = "true";
+            createCookie('bool', 'false', '180')
+            img1.src = "./images/bg-mobile-light.jpg";
+            document.querySelector('body').style.backgroundColor = "white";
+            img2.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><path fill="#FFF" fill-rule="evenodd" d="M13 0c.81 0 1.603.074 2.373.216C10.593 1.199 7 5.43 7 10.5 7 16.299 11.701 21 17.5 21c2.996 0 5.7-1.255 7.613-3.268C23.22 22.572 18.51 26 13 26 5.82 26 0 20.18 0 13S5.82 0 13 0z"/></svg>'
+        }
+    } else {
+        lightDark();
+    }
+}
+
+var x = window.matchMedia("(max-width: 430px)")
+myFunction(x) // Call listener function at run time
+x.addListener(myFunction) // Attach listener function on state changes
+
 //call funcs
-lightDark()
+
+cookie();
+line();
+del();
+addEventListeners();
+itemLeft();
+act();
+comp();
+all();
 
