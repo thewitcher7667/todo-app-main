@@ -38,6 +38,7 @@ body {
 .butts {
     //position:absolute;
     //text-align: center;
+    display: flex;
     margin: 1px;
     padding-bottom: 50px;
 }
@@ -62,6 +63,7 @@ body {
 }
 
 .butt2 {
+    display:flex;
     margin-left: 10px;
     text-decoration: none;
     border: none;
@@ -89,7 +91,7 @@ article {
     box-sizing:border-box;
     font-size:18px;
 }
-.sec22 div {
+.sec22 div div{
     box-sizing: border-box;
     padding: 10px;
     width: 400px;
@@ -120,4 +122,17 @@ article {
 
 .sec22 input, .sec22 span {
     cursor: pointer;
+}
+
+.lineThrow {
+    color: hsl(234, 39%, 85%);
+    text-decoration-line: line-through;
+    text-decoration-color: hsl(234, 39%, 85%);
+}
+.lineNot {
+    color: white;
+    text-decoration-line: none;
+}
+.div2{
+   
 }

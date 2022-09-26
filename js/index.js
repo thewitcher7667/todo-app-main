@@ -27,7 +27,7 @@ light.forEach((el) => {
 
 let val = 0;
 
-//events
+//buutons
 img2.addEventListener('click', lightDark);
 butt.addEventListener('click', make);
 
@@ -35,23 +35,27 @@ butt.addEventListener('click', make);
 buttAll.addEventListener('click',all);
 
 
-buttActive.addEventListener('click', () => {
+buttActive.addEventListener('click', act)
+function act() {
     all()
     let count1 = document.querySelectorAll('.completed');
     count1.forEach((count) => {
         count.style.display = 'none';
     });
+}
 
-});
 
-buttComp.addEventListener('click', () => {
+
+buttComp.addEventListener('click', comp)
+function comp() {
     all()
     let count2 = document.querySelectorAll('.need');
     count2.forEach((count) => {
         count.style.display = 'none';
     });
+}
 
-});
+
 
 buttClear.addEventListener('click', () => {
     let count2 = document.querySelectorAll('.completed');
@@ -65,7 +69,7 @@ buttClear.addEventListener('click', () => {
 //funcs
 
 function all() {
-    let count = document.querySelectorAll('.sec22 div');
+    let count = document.querySelectorAll('.div2');
     count.forEach((countt) => {
         countt.style.display = 'block';
     });
@@ -104,64 +108,127 @@ function make() {
     let inpval = inptext.value;
     let fragment = document.createDocumentFragment();
     let div = document.createElement('div');
+    let div2 = document.createElement('div');
     let checkbox = document.createElement('input');
     let lable = document.createElement('label');
     let spanSvg = document.createElement('span');
     let hr = document.createElement('hr');
-
-    line(checkbox, lable , div);
-    lable.innerText = inpval;
-    spanSvg.innerHTML = delIt;
 
     fragment.appendChild(checkbox);
     fragment.appendChild(spanSvg);
     fragment.appendChild(lable);
     fragment.appendChild(hr);
 
-    div.appendChild(fragment);
+    div2.appendChild(fragment);
+    div.appendChild(div2);
+
+    fragment.appendChild(div);
+    sec22.appendChild(fragment);
 
     //setAttributes(div, { 'draggable': 'true', 'class': 'need', "id": `ID${val}` });
     //setAttributes(spanSvg, { 'class': 'spanSvg', "id": `span${val}` });
     //setAttributes(checkbox, { 'type': 'checkbox', 'value': `${val}` });
     //setAttributes(lable, { 'for': `${val}` });
-    setAttributes([div, spanSvg, checkbox, lable], [{ 'draggable': 'true', 'class': 'need', "id": `ID${val}` },
-        { 'class': 'spanSvg', "id": `span${val}` },
-        { 'type': 'checkbox', 'value': `${val}` },
-        { 'for': `${val}` }
+    setAttributes([div, div2, spanSvg, checkbox, lable], [{ "id": `ID${val}`, 'class': 'div1' },
+        { 'draggable': 'true', 'class': 'need div2', "id": `IDTwo${val}` },
+    { 'class': 'spanSvg', "id": `span${val}` },
+        { 'type': 'checkbox', 'value': `${val}`, 'class': `check`, "id": `check${val}` },
+        { 'for': `${val}`, 'class': 'label', "id": `label${val}` }
     ])
 
-    fragment.appendChild(div);
-    sec22.appendChild(fragment);
- 
+    lable.innerText = inpval;
+    spanSvg.innerHTML = delIt;
+
+
     val++;
     inptext.value = '';
 
-
-    spanSvg.addEventListener('click', () => {
-        div.remove();
-        itemLeft();
-    });
-
+    line()
+    addEventListeners();
     itemLeft();
+    del();
+   
 }
 
-function line(checkbox, lable,div) {
-    checkbox.addEventListener('click', () => {
-        if (checkbox.checked === true) {
-            lable.style.textDecoration = 'line-through hsl(234, 39%, 85%)';
-            lable.style.color = 'hsl(234, 39%, 85%)';
-            div.classList.remove('need')
-            div.setAttribute('class', `completed`);
+function addEventListeners() {
 
-        } if (checkbox.checked === false) {
-            lable.style.textDecoration = 'none';
-            lable.style.color = 'white'
-            div.classList.remove('completed')
-            div.setAttribute('class', `need`);
-        }
-        itemLeft()
-    });
+    let items = document.querySelectorAll('.div1');
     
+    function handleDragStart(e) {
+        start = e.toElement.parentElement.attributes.id.value;
+          startend = document.getElementById(start).innerHTML;
+        
+
+    }
+
+    function handleDrop(e) {
+        e.stopPropagation();
+        let end = e.toElement.parentElement.attributes.id.value;
+        let endstart = document.getElementById(end).innerHTML;
+        if (startend !== endstart) {
+            document.getElementById(end).innerHTML = `${startend}`;
+            document.getElementById(start).innerHTML = `${endstart}`;
+        }
+        line();
+        del();
+        act();
+        comp();
+        all()
+         return false;
+
+    }
+
+        function handleDragEnd(e) {
+            items.forEach(function (item) {
+                item.classList.remove('over');
+            });
+        }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+        }
+
+        function handleDragLeave(e) {
+
+        }
+
+        items.forEach(function (item) {
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('dragenter', handleDragEnter);
+            item.addEventListener('dragleave', handleDragLeave);
+            item.addEventListener('dragend', handleDragEnd);
+            item.addEventListener('drop', handleDrop);
+        });
+    
+}
+
+function line() {
+    let checkBox = document.querySelectorAll('.check')
+    checkBox.forEach((check) => {
+        check.addEventListener('click', () => {
+            let checkId = check.id;
+
+            let lable = document.getElementById(`label${checkId[5]}`);
+            let div2 = document.getElementById(`IDTwo${checkId[5]}`);
+
+            if (check.checked === true) {
+                lable.classList.remove('lineNot')
+                div2.classList.remove('need')
+                div2.classList.add(`completed`);
+                lable.classList.add(`lineThrow`);
+            } if (check.checked === false) {
+                lable.classList.remove('lineThrow')
+                lable.classList.add(`lineNot`);
+                div2.classList.remove('completed')
+                div2.classList.add(`need`);
+            }
+            itemLeft()
+        });
+    });
 }
 
 function itemLeft() {
@@ -169,6 +236,18 @@ function itemLeft() {
         Ileft.innerText = count.length; 
 }
 
+function del() {
+    let spanSvg = document.querySelectorAll('.spanSvg')
+    spanSvg.forEach((span) => {
+        span.addEventListener('click', () => {
+            let num = span.id.split("");
+            document.getElementById(`IDTwo${num[4]}`).remove();
+            itemLeft();
+        });
+
+    })
+   
+}
 
 //call funcs
 lightDark()
