@@ -97,7 +97,6 @@ function setAttributes(el, attrs) {
 }
 
 function make() {
-    console.log('clicked');
     inptext.focus();
     let inpval = inptext.value;
     let fragment = document.createDocumentFragment();
@@ -153,7 +152,6 @@ function addEventListeners() {
     let items = document.querySelectorAll('.div1');
     
     if ("ontouchstart" in document.documentElement) {
-        console.log('mob');
         function onDragStart(e) {
             start = e.toElement.parentElement.attributes.id.value;
             startend = document.getElementById(start).innerHTML;
@@ -195,7 +193,6 @@ function addEventListeners() {
         });
     }
     else {
-        console.log('desk');
         items.forEach(function (item) {
             item.addEventListener('dragstart', (e) => {
                 start = e.toElement.parentElement.attributes.id.value;
@@ -293,7 +290,6 @@ function cookie() {
             try {
                 let datacj = JSON.parse(datac);
                 let dataClassString = JSON.parse(dataClass);
-                console.log('this is data',dataClassString)
                 tr(datacj, dataClassString);
                 
             } catch (err) {
@@ -303,7 +299,6 @@ function cookie() {
             }
             function tr(datacj, dataClass) {
                 for (let i = 0; i < datacj.length; i++) {
-                    console.log('this is all', dataClass);
                     make();
                     let lbl = document.getElementById(`label${i}`)
                     lbl.innerHTML = datacj[i];
