@@ -139,13 +139,13 @@ article {
 
 @media only screen and (min-width:200px) and (max-width: 430px){
     .img1 img {
+        width:430px;
         max-width:430px;
     }
 
     .todotxt {
         color: hsl(0, 0%, 98%);
         font-size: 40px;
-        max-width:60px;
         font-weight: 700;
         position: absolute;
         left: 23%;

@@ -152,57 +152,77 @@ function addEventListeners() {
 
     let items = document.querySelectorAll('.div1');
     
-    function handleDragStart(e) {
-        start = e.toElement.parentElement.attributes.id.value;
-          startend = document.getElementById(start).innerHTML;
-        
-
-    }
-
-    function handleDrop(e) {
-        e.stopPropagation();
-        let end = e.toElement.parentElement.attributes.id.value;
-        let endstart = document.getElementById(end).innerHTML;
-        if (startend !== endstart) {
-            document.getElementById(end).innerHTML = `${startend}`;
-            document.getElementById(start).innerHTML = `${endstart}`;
+    if ("ontouchstart" in document.documentElement) {
+        console.log('mob');
+        function onDragStart(e) {
+            start = e.toElement.parentElement.attributes.id.value;
+            startend = document.getElementById(start).innerHTML;
         }
-        line();
-        del();
-        act();
-        comp();
-        all();
-        cookie();
-         return false;
-
-    }
-
-        function handleDragEnd(e) {
-            items.forEach(function (item) {
-                item.classList.remove('over');
-            });
+        function onDragOver(e) {
+            e.preventDefault();
+            return false;
         }
-
-    function handleDragOver(e) {
-        e.preventDefault();
+        function onDragEnter(e) {
         }
-
-        function handleDragEnter(e) {
+        function onDragLeave(e) {
         }
-
-        function handleDragLeave(e) {
+        function onDrop(e) {
+            e.stopPropagation();
+            let end = e.toElement.parentElement.attributes.id.value;
+            let endstart = document.getElementById(end).innerHTML;
+            if (startend !== endstart) {
+                document.getElementById(end).innerHTML = `${startend}`;
+                document.getElementById(start).innerHTML = `${endstart}`;
+            }
+            line();
+            del();
+            act();
+            comp();
+            all();
+            cookie();
+            return false;
+        }
+        function onDragEnd(e) {
 
         }
-
-        items.forEach(function (item) {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('dragenter', handleDragEnter);
-            item.addEventListener('dragleave', handleDragLeave);
-            item.addEventListener('dragend', handleDragEnd);
-            item.addEventListener('drop', handleDrop);
+        [].forEach.call(items, function (box) {
+            box.addEventListener("dragstart", onDragStart);
+            box.addEventListener("dragenter", onDragEnter);
+            box.addEventListener("dragover", onDragOver);
+            box.addEventListener("dragleave", onDragLeave);
+            box.addEventListener("drop", onDrop);
+            box.addEventListener("dragend", onDragEnd);
         });
-    
+    }
+    else {
+        console.log('desk');
+        items.forEach(function (item) {
+            item.addEventListener('dragstart', (e) => {
+                start = e.toElement.parentElement.attributes.id.value;
+                startend = document.getElementById(start).innerHTML;
+            });
+            item.addEventListener('dragover', (e) => { e.preventDefault(); });
+            item.addEventListener('dragenter', (e) => { });
+            item.addEventListener('dragleave', (e) => { });
+            item.addEventListener('dragend', (e) => { });
+            item.addEventListener('drop', (e) => {
+                e.stopPropagation();
+                let end = e.toElement.parentElement.attributes.id.value;
+                let endstart = document.getElementById(end).innerHTML;
+                if (startend !== endstart) {
+                    document.getElementById(end).innerHTML = `${startend}`;
+                    document.getElementById(start).innerHTML = `${endstart}`;
+                }
+                line();
+                del();
+                act();
+                comp();
+                all();
+                cookie();
+                return false;
+            });
+        });
+    }     
 }
 
 function line() {
@@ -271,7 +291,7 @@ function cookie() {
             let datacj = JSON.parse(datac);
             for (let i = 0; i < datacj.length; i++) {
                make();
-               document.getElementById(`label${i}`).innerText = datacj[i];
+               document.getElementById(`label${i}`).innerHTML = datacj[i];
                 console.log(i);
             }
         }
