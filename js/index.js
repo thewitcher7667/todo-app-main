@@ -124,7 +124,7 @@ function make() {
     //setAttributes(checkbox, { 'type': 'checkbox', 'value': `${val}` });
     //setAttributes(lable, { 'for': `${val}` });
     setAttributes([div, div2, spanSvg, checkbox, lable], [{ "id": `ID${val}`, 'class': 'div1' },
-        { 'draggable': 'true', 'class': 'need div2', "id": `IDTwo${val}` },
+        { 'draggable': 'true', 'class': 'div2 need', "id": `IDTwo${val}` },
     { 'class': 'spanSvg', "id": `span${val}` },
         { 'type': 'checkbox', 'value': `${val}`, 'class': `check`, "id": `check${val}` },
         { 'for': `${val}`, 'class': 'label', "id": `label${val}` }
@@ -246,6 +246,7 @@ function line() {
                 div2.classList.add(`need`);
             }
             itemLeft()
+            cookie();
         });
     });
 }
@@ -285,33 +286,52 @@ function checkEmp() {
 function cookie() {
     if (dataCookieFirst === true) {
         let datac = getCookie("data");
+        let dataClass = getCookie('dataClass');
         if (datac == '') {
             datacj = '';
         } else {
             try {
                 let datacj = JSON.parse(datac);
-                tr(datacj);
+                let dataClassString = JSON.parse(dataClass);
+                console.log('this is data',dataClassString)
+                tr(datacj, dataClassString);
+                
             } catch (err) {
+                console.log(err)
                 datacj = '';
-                tr(datacj);
+            //    tr(datacj, dataClassString);
             }
-            function tr(datacj) {
+            function tr(datacj, dataClass) {
                 for (let i = 0; i < datacj.length; i++) {
+                    console.log('this is all', dataClass);
                     make();
-                    document.getElementById(`label${i}`).innerHTML = datacj[i];
-                    console.log(i);
+                    let lbl = document.getElementById(`label${i}`)
+                    lbl.innerHTML = datacj[i];
+
+                    if (dataClass[i][1] === 'undefined') {
+                        console.log('undefined')
+                    } else if (dataClass[i][1] === "lineThrow") {
+                        console.log('lineThrow')
+                        lbl.classList.add(dataClass[i][1]);
+                    }
+
                 }
             }
         }
     } else if (dataCookieFirst === false) {
         let theData = document.querySelectorAll('label');
-        dataArr = [];
+        let dataArr = [];
+        let dataClassArr = [];
         theData.forEach((data) => {
             let dataInn = data.innerHTML;
+            let dataClass = data.classList;
             dataArr.push(dataInn);
+            dataClassArr.push(dataClass);
         });
         let strigData = JSON.stringify(dataArr);
-        createCookie('data', strigData,'180');
+        let strigDataClass = JSON.stringify(dataClassArr);
+        createCookie('data', strigData, '180');
+        createCookie('dataClass', strigDataClass, '180');
     }
     dataCookieFirst = false;
 }
@@ -329,16 +349,16 @@ function createCookie(name, value, days) {
     document.cookie = name + "=" + value + expires + "; path=/";
 }
 
-function getCookie(c_name) {
-    if (document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end));
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
         }
     }
     return "";
