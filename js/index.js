@@ -288,11 +288,19 @@ function cookie() {
         if (datac == '') {
             datacj = '';
         } else {
-            let datacj = JSON.parse(datac);
-            for (let i = 0; i < datacj.length; i++) {
-               make();
-               document.getElementById(`label${i}`).innerHTML = datacj[i];
-                console.log(i);
+            try {
+                let datacj = JSON.parse(datac);
+                tr(datacj);
+            } catch (err) {
+                datacj = '';
+                tr(datacj);
+            }
+            function tr(datacj) {
+                for (let i = 0; i < datacj.length; i++) {
+                    make();
+                    document.getElementById(`label${i}`).innerHTML = datacj[i];
+                    console.log(i);
+                }
             }
         }
     } else if (dataCookieFirst === false) {
